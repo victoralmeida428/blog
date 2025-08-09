@@ -1,7 +1,6 @@
-import {AppError} from "@/app/api/errors/AppError";
-
-export class InternalError extends AppError{
+export class InternalError extends Error {
     status: number = 500;
+
     constructor() {
         super('Internal Error Server');
         this.name = 'InternalError';

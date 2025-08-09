@@ -43,17 +43,6 @@ export class Post {
         return this._isPublished;
     }
 
-    toDTO(): PostDTO {
-        return {
-            title: this.title,
-            content: this.content,
-            isPublished: this._isPublished,
-            createdAt: this.createdAt,
-            authorId: this.authorId,
-            id: this.id
-        }
-    }
-
     static create(data: PostCreateInput) {
         return new Post(
             null,

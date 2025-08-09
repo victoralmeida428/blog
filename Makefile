@@ -27,4 +27,7 @@ migrate-status: ## Verifica o estado atual das migrations
 	@echo "Verificando o estado das migrations..."
 	docker compose exec web-dev npx prisma migrate status
 
+test:
+	npm test
+
 .PHONY: migrate-dev migrate-up migrate-down help

@@ -11,7 +11,7 @@ export class PostService {
 
     async createPost(data: PostCreateInput): Promise<Post> {
         if (data.title == '') throw new Error("title is required");
-        const newPost = Post.create(data)
+        const newPost = Post.create(data);
         return await this.postRepository.create(newPost);
     }
 

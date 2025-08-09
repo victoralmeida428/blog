@@ -14,12 +14,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Session {
+  id        String   @id
+  userId    Int
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id       Int       @id @default(autoincrement())
+  username String    @unique
+  email    String    @unique
+  name     String?
   password String
-  posts Post[]
+  is_admin Boolean   @default(false)
+  posts    Post[]
+  sessions Session[]
 
   @@map("usuario")
 }

@@ -53,11 +53,11 @@ describe('PostController', () => {
 
             // 3. Criamos os objetos falsos para a requisição
             const mockRequest = {} as NextRequest;
-            const mockContext: RouteContext = {params: {id: '1'}};
+            const mockContext = {params: {id: '1'}};
 
             // ACT (Agir)
             // 4. Executamos o método que queremos testar
-            const response = await postController.getById(mockRequest, mockContext);
+            const response = await postController.getById(mockRequest, mockContext as unknown as RouteContext);
             const body = await response.json();
 
             // ASSERT (Verificar)
@@ -75,10 +75,10 @@ describe('PostController', () => {
             mockPostService.searchPost.mockResolvedValue(null);
 
             const mockRequest = {} as NextRequest;
-            const mockContext: RouteContext = {params: {id: '999'}};
+            const mockContext = {params: {id: '999'}};
 
             // ACT
-            const response = await postController.getById(mockRequest, mockContext);
+            const response = await postController.getById(mockRequest, mockContext as unknown as RouteContext);
 
             // ASSERT
             expect(response.status).toBe(404);
@@ -130,10 +130,10 @@ describe('PostController', () => {
             // O serviço retorna true para indicar que a deleção foi bem sucedida
             mockPostService.deletePost.mockResolvedValue();
             const mockRequest = {} as NextRequest;
-            const mockContext: RouteContext = {params: {id: '1'}};
+            const mockContext = {params: {id: '1'}};
 
             // ACT
-            const response = await postController.deletePost(mockRequest, mockContext);
+            const response = await postController.deletePost(mockRequest, mockContext as unknown as RouteContext);
 
             // ASSERT
             expect(response.status).toBe(200);

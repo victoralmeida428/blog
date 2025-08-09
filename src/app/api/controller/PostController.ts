@@ -1,14 +1,16 @@
 import {NextRequest, NextResponse} from "next/server";
-import {Prisma} from "@/generated/prisma";
 import {AbstractController, RouteContext} from "@/app/api/controller/AbsctractController";
 import {PostService} from "@/app/api/services/PostService";
-import {PostCreateInput} from "@/app/api/dominio/Post";
-import PostUpdateInput = Prisma.PostUpdateInput;
+import {PostCreateInput, PostDTO} from "@/app/api/dominio/Post";
+import {UserService} from "@/app/api/services/UserSevice";
 
 export class PostController extends AbstractController {
 
-    constructor(private readonly postService: PostService) {
-        super();
+    constructor(
+        private readonly postService: PostService,
+        protected readonly userService: UserService
+    ) {
+        super(userService);
     }
 
     /**
@@ -39,7 +41,7 @@ export class PostController extends AbstractController {
      */
     async updatePost(request: NextRequest, context: RouteContext) {
         try {
-            const body = await request.json() as PostUpdateInput;
+            const body = await request.json() as Partial<PostDTO>;
             const id = await this.getID(context);
             await this.postService.updatePost(id, body);
             return new NextResponse("post updated successfully");
@@ -91,12 +93,16 @@ export class PostController extends AbstractController {
 
     async createPost(request: NextRequest) {
         try {
+            const user = await this.getUser(request);
+            console.log(user);
+            return NextResponse.json(user, {status: 201});
             const body = await request.json() as PostCreateInput;
+            body.authorId = user.id!;
             const newPost = await this.postService.createPost(body);
             return NextResponse.json(newPost, {status: 201});
 
         } catch (error) {
-            this.handlerError(error);
+            return this.handlerError(error);
         }
     }
 }
