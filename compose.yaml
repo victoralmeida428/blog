@@ -1,0 +1,41 @@
+services:
+  web-dev:
+    container_name: blog-web-dev
+    ports:
+      - '3000:3000'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .dev.env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+#  web-prod:
+#    container_name: blog-web-prod
+#    build:
+#      context: .
+#      dockerfile: deploy/Dockerfile
+#    env_file:
+#      - .prod.env
+#    depends_on:
+#      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: meu-blog-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: blog_user
+      POSTGRES_PASSWORD: HS28394ASD1s
+      POSTGRES_DB: blog
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
