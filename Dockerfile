@@ -1,9 +1,9 @@
 # --- Estágio Base ---
 # Usamos uma imagem Node.js completa que inclui ferramentas de build.
 # A versão 18 é a LTS (Long-Term Support) recomendada pelo Next.js.
-FROM node:18-alpine AS base
+FROM node:22-alpine AS base
 # Define o diretório de trabalho dentro do contêiner.
-WORKDIR /app
+WORKDIR /opt/blog
 
 # --- Estágio de Dependências ---
 # Este estágio é dedicado a instalar as dependências. O Docker fará cache
@@ -18,10 +18,10 @@ RUN npm install
 # Este é o estágio final que será usado para rodar o ambiente de dev.
 FROM base AS development
 # Define o diretório de trabalho.
-WORKDIR /app
+WORKDIR /opt/blog
 # Copia as dependências já instaladas do estágio 'deps'.
 # Isso é muito mais rápido do que reinstalar tudo a cada mudança de código.
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /opt/blog/node_modules ./node_modules
 # Copia todo o resto do código-fonte do seu projeto.
 COPY . .
 

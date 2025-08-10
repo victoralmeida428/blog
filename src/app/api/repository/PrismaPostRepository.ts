@@ -40,14 +40,22 @@ export class PrismaPostRepository implements IPostRepository {
     }
 
     async findAll(): Promise<Post[]> {
-        const prismaPost =  await this.prisma.post.findMany();
+        const prismaPost = await this.prisma.post.findMany({
+            include: {
+                author: true
+            }
+        });
         return prismaPost.map(post => this.mapper.toDomain(post));
     }
 
     async findById(id: number): Promise<Post | null> {
-        const prismaPost =  await this.prisma.post.findUnique({
-            where:{id}
+        const prismaPost = await this.prisma.post.findUnique({
+            where: {id},
+            include: {
+                author: true
+            }
         });
+
         if (!prismaPost) {
             return null;
         }

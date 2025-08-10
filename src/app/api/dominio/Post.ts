@@ -1,3 +1,5 @@
+import {User} from "@/app/api/dominio/User";
+
 export type PostDTO = {
     id: number,
     title: string,
@@ -5,6 +7,7 @@ export type PostDTO = {
     isPublished: boolean,
     createdAt: Date,
     authorId: number,
+    author: User | null,
 }
 
 export type PostCreateInput = {
@@ -15,6 +18,8 @@ export type PostCreateInput = {
 }
 
 export class Post {
+    public author: User | null = null;
+
     constructor(
         public readonly id: number | null,
         public title: string,
@@ -25,7 +30,7 @@ export class Post {
     ) {
     }
 
-    get excertpt(): string {
+    get excerpt(): string {
         return (this.content ?? '').length > 100
             ? this.content!.substring(0, 100).concat('...')
             : this.content ?? '';
@@ -55,7 +60,7 @@ export class Post {
     };
 
     static reconstitute(data: PostDTO): Post {
-        return new Post(
+        const post = new Post(
             data.id,
             data.title,
             data.content,
@@ -63,6 +68,12 @@ export class Post {
             data.createdAt,
             data.authorId,
         );
+
+        if (data.author) {
+            post.author = data.author;
+        }
+
+        return post;
     }
 
 }

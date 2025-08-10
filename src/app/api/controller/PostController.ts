@@ -27,7 +27,17 @@ export class PostController extends AbstractController {
                 return new NextResponse("Post not found", {status: 404});
             }
 
-            return NextResponse.json(post);
+            return NextResponse.json({
+                id: post.id,
+                title: post.title,
+                content: post.excerpt,
+                createdAt: post.createdAt,
+                isPulished: post.isPublished(),
+                author: {
+                    id: post.authorId,
+                    username: post.author?.username
+                }
+            });
         } catch (error) {
             return this.handlerError(error);
         }
@@ -79,10 +89,13 @@ export class PostController extends AbstractController {
                 return {
                     id: post.id,
                     title: post.title,
-                    content: post.excertpt,
+                    content: post.excerpt,
                     createdAt: post.createdAt,
                     isPulished: post.isPublished(),
-                    authorId: post.authorId
+                    author: {
+                        id: post.authorId,
+                        username: post.author?.username
+                    }
                 };
             }));
         } catch
@@ -94,8 +107,6 @@ export class PostController extends AbstractController {
     async createPost(request: NextRequest) {
         try {
             const user = await this.getUser(request);
-            console.log(user);
-            return NextResponse.json(user, {status: 201});
             const body = await request.json() as PostCreateInput;
             body.authorId = user.id!;
             const newPost = await this.postService.createPost(body);
